@@ -115,6 +115,164 @@ public final class UniqueRandomIntegerGen {
         return setChanged;
     }
 
+    public void tryInsertRelative(final int rel) // // TODO return boolean of (success?)
+    {
+        final int hc0 = this.halfCounts[0];
+        if (rel > hc0)
+        {
+            // then it goes somewhere in the second half of the space
+            final int newRemainder = rel - hc0;
+            this.tryInsertRelative_ForGivenHalf(1, newRemainder);
+        }
+        else
+        { // then it goes somewhere in the first half of the space
+            this.tryInsertRelative_ForGivenHalf(0, rel);
+        }
+    }
+
+    /**
+     * Complete the relative insert op, for a given halfIndex value (0 or 1), and a given remainder
+     * (i.e. we've already subtracted the component of the index which decides which half it belongs to,
+     * according to how many elements there are in that half).
+     * n.b. It's relative; even an input of 0 might correspond to the second half, if we're approaching saturation.
+     * @param halfIndex
+     * @param remainder
+     */
+    private void tryInsertRelative_ForGivenHalf(final int halfIndex, final int remainder)
+    {
+        ++(this.halfCounts[halfIndex]);
+        final int indexOfQuarterToFirstCheck = (halfIndex == 0) ? 0 : 2;
+        final int thatQuarterCount = this.quarterCounts[indexOfQuarterToFirstCheck];
+        final int thatQuarterSpacesFree = 512 - thatQuarterCount;
+        final boolean overflowsThatQuarter = (remainder > thatQuarterSpacesFree);
+
+        if (overflowsThatQuarter)
+        {
+            final int correctQuarterIndex = indexOfQuarterToFirstCheck + 1;
+            final int newRemainder = remainder - thatQuarterCount;
+            this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, newRemainder);
+        }
+        else
+        {
+            final int correctQuarterIndex = indexOfQuarterToFirstCheck;
+            this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, remainder);
+        }
+    }
+
+
+    private void tryInsertRelative_ForGivenQuarter(final int quarterIndex, final int remainder)
+    {
+        ++(this.quarterCounts[quarterIndex]);
+        final int indexOfEighthToFirstCheck = quarterIndex * 2;
+        final int count = this.eighthsCounts[indexOfEighthToFirstCheck];
+        final int spacesFree = 256 - count;
+        final boolean overflows = (remainder > spacesFree);
+
+        if (overflows)
+        {
+            final int correctEighthIndex = indexOfEighthToFirstCheck + 1;
+            final int newRemainder = remainder - count;
+            this.tryInsertRelative_ForGivenEighth(correctEighthIndex, newRemainder);
+        }
+        else
+        {
+            final int correctEighthIndex = indexOfEighthToFirstCheck;
+            this.tryInsertRelative_ForGivenEighth(correctEighthIndex, remainder);
+        }
+    }
+
+    private void tryInsertRelative_ForGivenEighth(final int intervalIndex, final int remainder)
+    {
+        ++(this.eighthsCounts[intervalIndex]);
+        final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
+        final int count = this.counts16[indexOfSubintervalToFirstCheck];
+        final int spacesFree = 128 - count;
+        final boolean overflows = (remainder > spacesFree);
+
+        if (overflows)
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
+            final int newRemainder = remainder - count;
+            this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, newRemainder);
+        }
+        else
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
+            this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, remainder);
+        }
+    }
+
+    private void tryInsertRelative_ForGiven16th(final int intervalIndex, final int remainder)
+    {
+        ++(this.counts16[intervalIndex]);
+        final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
+        final int count = this.counts32[indexOfSubintervalToFirstCheck];
+        final int spacesFree = 64 - count;
+        final boolean overflows = (remainder > spacesFree);
+
+        if (overflows)
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
+            final int newRemainder = remainder - count;
+            this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, newRemainder);
+        }
+        else
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
+            this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, remainder);
+        }
+    }
+
+    private void tryInsertRelative_ForGiven32th(final int intervalIndex, final int remainder)
+    {
+        ++(this.counts32[intervalIndex]);
+        final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
+        final int count = this.counts64[indexOfSubintervalToFirstCheck];
+        final int spacesFree = 32 - count;
+        final boolean overflows = (remainder > spacesFree);
+
+        if (overflows)
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
+            final int newRemainder = remainder - count;
+            this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, newRemainder);
+        }
+        else
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
+            this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, remainder);
+        }
+    }
+
+    private void tryInsertRelative_ForGiven64th(final int intervalIndex, final int remainder)
+    {
+        ++(this.counts64[intervalIndex]);
+        final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
+        final int count = this.counts128[indexOfSubintervalToFirstCheck];
+        final int spacesFree = 16 - count;
+        final boolean overflows = (remainder > spacesFree);
+
+        if (overflows)
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
+            final int newRemainder = remainder - count;
+            this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, newRemainder);
+        }
+        else
+        {
+            final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
+            this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, remainder);
+        }
+    }
+
+    private void tryInsertRelative_ForGiven128th(final int intervalIndex, final int remainder) // TODO redundant param?
+    {
+        ++(this.counts128[intervalIndex]);
+        // TODO add to hashset
+        this.hs.add(intervalIndex); // // // why do it here???
+    }
+
+
 
     public static void main(final String[] args)
     {
