@@ -126,6 +126,9 @@ public final class UniqueRandomIntegerGen {
         final boolean insOk5 = urig.tryInsertValue(513);
         final boolean insOk5_rep = urig.tryInsertValue(513); // bad attempt, should return false
         final boolean insOk6 = urig.tryInsertValue(1000);
+        final boolean insOk7 = urig.tryInsertValue(2000);
+        final boolean insOk8 = urig.tryInsertValue(2047);
+        final boolean insOk9 = urig.tryInsertValue(1048);
 
         final boolean checkedOk = urig.sanityCheck();
 
