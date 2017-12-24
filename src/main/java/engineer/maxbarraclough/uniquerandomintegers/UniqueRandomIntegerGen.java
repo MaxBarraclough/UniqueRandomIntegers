@@ -127,7 +127,7 @@ public final class UniqueRandomIntegerGen {
         return setChanged;
     }
 
-    public void tryInsertRelative(final int rel) // // TODO return boolean of (success?)
+    public void tryInsertRelative(final int rel) // TODO return absolute value
     {
         if (!(rel >= 0))
         {
@@ -486,9 +486,14 @@ public final class UniqueRandomIntegerGen {
 
         final UniqueRandomIntegerGen urig = new UniqueRandomIntegerGen();
 
-        for (int i = 2047; i >= 0; --i)
+
+        final int topVal = 2047;
+        final int numValsToGen = 500;
+
+        for (int i = 0; i < numValsToGen; ++i)
         {
-            final int rand = rng.nextInt(i+1); // returns an int s.t. 0 <= x < arg (i.e. exclusive of arg)
+            final int maxValOfRange = 2047 - i;
+            final int rand = rng.nextInt(maxValOfRange + 1); // returns an int s.t. 0 <= x < arg (i.e. exclusive of arg)
             urig.tryInsertRelative(rand);
         }
 
