@@ -18,6 +18,7 @@ package engineer.maxbarraclough.uniquerandomintegers;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Generate 500 unique integers in the range 0..2047.
@@ -128,11 +129,24 @@ public final class UniqueRandomIntegerGen {
 
     public void tryInsertRelative(final int rel) // // TODO return boolean of (success?)
     {
+        if (!(rel >= 0))
+        {
+            assert(rel >= 0);
+        }
+
+        if (!((rel < 2048)))
+        {
+            assert(rel < 2048);
+        }
+
         final int hc0 = this.halfCounts[0];
-        if (rel > hc0)
+        final int spacesFree = 1024 - hc0;
+        final boolean overflowsFirstHalf = (rel > spacesFree);
+
+        if (overflowsFirstHalf)
         {
             // then it goes somewhere in the second half of the space
-            final int newRemainder = rel - hc0;
+            final int newRemainder = rel - spacesFree;
             this.tryInsertRelative_ForGivenHalf(1, newRemainder);
         }
         else
@@ -143,7 +157,7 @@ public final class UniqueRandomIntegerGen {
 
     /**
      * Complete the relative insert op, for a given halfIndex value (0 or 1), and a given remainder
-     * (i.e. we've already subtracted the component of the index which decides which half it belongs to,
+ (absIndex.e. we've already subtracted the component of the index which decides which half it belongs to,
      * according to how many elements there are in that half).
      * n.b. It's relative; even an input of 0 might correspond to the second half, if we're approaching saturation.
      * @param halfIndex
@@ -151,6 +165,16 @@ public final class UniqueRandomIntegerGen {
      */
     private void tryInsertRelative_ForGivenHalf(final int halfIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 1024)))
+        {
+            assert(remainder < 1024);
+        }
+
         ++(this.halfCounts[halfIndex]);
         final int indexOfQuarterToFirstCheck = (halfIndex == 0) ? 0 : 2;
         final int thatQuarterCount = this.quarterCounts[indexOfQuarterToFirstCheck];
@@ -160,7 +184,7 @@ public final class UniqueRandomIntegerGen {
         if (overflowsThatQuarter)
         {
             final int correctQuarterIndex = indexOfQuarterToFirstCheck + 1;
-            final int newRemainder = remainder - thatQuarterCount;
+            final int newRemainder = remainder - thatQuarterSpacesFree;
             this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, newRemainder);
         }
         else
@@ -173,6 +197,16 @@ public final class UniqueRandomIntegerGen {
 
     private void tryInsertRelative_ForGivenQuarter(final int quarterIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 512)))
+        {
+            assert(remainder < 512);
+        }
+
         ++(this.quarterCounts[quarterIndex]);
         final int indexOfEighthToFirstCheck = quarterIndex * 2;
         final int count = this.eighthsCounts[indexOfEighthToFirstCheck];
@@ -182,7 +216,7 @@ public final class UniqueRandomIntegerGen {
         if (overflows)
         {
             final int correctEighthIndex = indexOfEighthToFirstCheck + 1;
-            final int newRemainder = remainder - count;
+            final int newRemainder = remainder - spacesFree;
             this.tryInsertRelative_ForGivenEighth(correctEighthIndex, newRemainder);
         }
         else
@@ -194,6 +228,16 @@ public final class UniqueRandomIntegerGen {
 
     private void tryInsertRelative_ForGivenEighth(final int intervalIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 256)))
+        {
+            assert(remainder < 256);
+        }
+
         ++(this.eighthsCounts[intervalIndex]);
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts16[indexOfSubintervalToFirstCheck];
@@ -203,7 +247,7 @@ public final class UniqueRandomIntegerGen {
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
-            final int newRemainder = remainder - count;
+            final int newRemainder = remainder - spacesFree;
             this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, newRemainder);
         }
         else
@@ -215,6 +259,16 @@ public final class UniqueRandomIntegerGen {
 
     private void tryInsertRelative_ForGiven16th(final int intervalIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 128)))
+        {
+            assert(remainder < 128);
+        };
+
         ++(this.counts16[intervalIndex]);
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts32[indexOfSubintervalToFirstCheck];
@@ -224,7 +278,7 @@ public final class UniqueRandomIntegerGen {
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
-            final int newRemainder = remainder - count;
+            final int newRemainder = remainder - spacesFree;
             this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, newRemainder);
         }
         else
@@ -236,6 +290,16 @@ public final class UniqueRandomIntegerGen {
 
     private void tryInsertRelative_ForGiven32th(final int intervalIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 64)))
+        {
+            assert(remainder < 64);
+        }
+
         ++(this.counts32[intervalIndex]);
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts64[indexOfSubintervalToFirstCheck];
@@ -245,7 +309,7 @@ public final class UniqueRandomIntegerGen {
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
-            final int newRemainder = remainder - count;
+            final int newRemainder = remainder - spacesFree;
             this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, newRemainder);
         }
         else
@@ -257,6 +321,16 @@ public final class UniqueRandomIntegerGen {
 
     private void tryInsertRelative_ForGiven64th(final int intervalIndex, final int remainder)
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 32)))
+        {
+            assert(remainder < 32);
+        }
+
         ++(this.counts64[intervalIndex]);
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts128[indexOfSubintervalToFirstCheck];
@@ -266,7 +340,7 @@ public final class UniqueRandomIntegerGen {
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
-            final int newRemainder = remainder - count;
+            final int newRemainder = remainder - spacesFree;
             this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, newRemainder);
         }
         else
@@ -276,24 +350,82 @@ public final class UniqueRandomIntegerGen {
         }
     }
 
+
     private void tryInsertRelative_ForGiven128th(final int intervalIndex, final int remainder) // TODO redundant param?
     {
+        if (!(remainder >= 0))
+        {
+            assert(remainder >= 0);
+        }
+
+        if (!((remainder < 16)))
+        {
+            assert(remainder < 16);
+        }
+
         ++(this.counts128[intervalIndex]);
-        // TODO add to hashset
 
+        // Compute the actual absolute index of the start of the interval
+        final int intervalStartAbsIndex = intervalIndex * 16;
+        final int intervalLastAbsIndex = intervalStartAbsIndex + 17;
 
-        // We must now compute the actual absolute index, from the two params we have
-        final int absoluteIndex = (intervalIndex * 128) + remainder;
+        // Iterate through the interval space until we've ticked off 'remainder' many unoccupied slots
+        // (absIndex.e. values not in the HashSet). Remember, 'remainder' may equal zero.
 
-        this.hs.add(absoluteIndex); // if we move away from HashSet, it will be more important that we do this at the 'bottom'
+        int unoccupiedSlotsToSkip = remainder;
+
+        for (int absIndex = intervalStartAbsIndex; ; ++absIndex) // break inside the loop
+        {
+            if (!(absIndex <= intervalLastAbsIndex))
+            {
+                assert (absIndex <= intervalLastAbsIndex);
+            }
+
+            if (!this.hs.contains(absIndex)) // unoccupied slot
+            {
+                if (0 == unoccupiedSlotsToSkip)
+                {
+                    this.hs.add(absIndex);
+                    break;
+                }
+                else
+                {
+                    --unoccupiedSlotsToSkip;
+                }
+            }
+            // if occupied, then do nothing, just continue on
+        }
+
+        // if we move away from HashSet, it will be more important that we do this at the 'bottom'
     }
 
+
+    /**
+     * No particular order
+     * @return
+     */
+    private Iterator<Integer> getIterator()
+    {
+        return this.hs.iterator();
+    }
+
+
+    /**
+     * Ascending order
+     * @return
+     */
+    private Iterator<Integer> getOrderedIterator()
+    { // Nope. http://www.lambdafaq.org/how-can-i-turn-an-array-into-an-iterator/
+        final Integer[] arr = this.hs.toArray(new Integer[this.hs.size()]);
+        Arrays.sort(arr);
+        final Iterator<Integer> ret = Arrays.asList(arr).iterator();
+        return ret;
+    }
 
     // We could have a findCountInInterval method, but all our operations are based on
     // the 'opposite', of finding the absolute index s.t. the count before that index, matches a given value
 
-
-    public static void main(final String[] args)
+    private static boolean scrappyTest1()
     {
         final UniqueRandomIntegerGen urig = new UniqueRandomIntegerGen();
         final boolean insOk1 = urig.tryInsertValue(5);
@@ -308,6 +440,33 @@ public final class UniqueRandomIntegerGen {
         final boolean insOk9 = urig.tryInsertValue(1048);
 
         final boolean checkedOk = urig.sanityCheck();
+        return checkedOk;
+    }
+
+    public static void main(final String[] args)
+    {
+
+        final UniqueRandomIntegerGen urig = new UniqueRandomIntegerGen();
+//        urig.tryInsertRelative(0);
+//        urig.tryInsertRelative(0);
+//        urig.tryInsertRelative(0);
+//        urig.tryInsertRelative(1);
+        // should now contain 0,1,2,4
+
+
+        urig.tryInsertRelative(509); // 509
+        urig.tryInsertRelative(509); // 510
+        urig.tryInsertRelative(509); // 511
+        urig.tryInsertRelative(509); // 512
+        urig.tryInsertRelative(509); // 513
+        urig.tryInsertRelative(511); // 515
+
+        for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
+        {
+            final Integer current = it.next();
+            System.out.println(current);
+        }
+
 
         System.out.println("Hello world");
     }
