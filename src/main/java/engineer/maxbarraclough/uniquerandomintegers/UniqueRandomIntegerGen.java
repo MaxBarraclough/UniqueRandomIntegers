@@ -469,7 +469,7 @@ public final class UniqueRandomIntegerGen {
         final boolean check4 = urig.sanityCheck();
 
         urig.tryInsertRelative(509); // 513
-        urig.tryInsertRelative(511); // 515 // // NOOOPE we're getting 16
+        urig.tryInsertRelative(511); // 516
 
         for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
         {
