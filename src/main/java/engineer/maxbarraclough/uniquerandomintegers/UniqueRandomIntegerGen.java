@@ -139,9 +139,11 @@ public final class UniqueRandomIntegerGen {
             assert(rel < 2048);
         }
 
+        ++(this.totalCount);
+
         final int hc0 = this.halfCounts[0];
         final int spacesFree = 1024 - hc0;
-        final boolean overflowsFirstHalf = (rel > spacesFree);
+        final boolean overflowsFirstHalf = (rel >= spacesFree);
 
         if (overflowsFirstHalf)
         {
@@ -179,7 +181,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfQuarterToFirstCheck = (halfIndex == 0) ? 0 : 2;
         final int thatQuarterCount = this.quarterCounts[indexOfQuarterToFirstCheck];
         final int thatQuarterSpacesFree = 512 - thatQuarterCount;
-        final boolean overflowsThatQuarter = (remainder > thatQuarterSpacesFree);
+        final boolean overflowsThatQuarter = (remainder >= thatQuarterSpacesFree);
 
         if (overflowsThatQuarter)
         {
@@ -211,7 +213,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfEighthToFirstCheck = quarterIndex * 2;
         final int count = this.eighthsCounts[indexOfEighthToFirstCheck];
         final int spacesFree = 256 - count;
-        final boolean overflows = (remainder > spacesFree);
+        final boolean overflows = (remainder >= spacesFree);
 
         if (overflows)
         {
@@ -242,7 +244,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts16[indexOfSubintervalToFirstCheck];
         final int spacesFree = 128 - count;
-        final boolean overflows = (remainder > spacesFree);
+        final boolean overflows = (remainder >= spacesFree);
 
         if (overflows)
         {
@@ -273,7 +275,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts32[indexOfSubintervalToFirstCheck];
         final int spacesFree = 64 - count;
-        final boolean overflows = (remainder > spacesFree);
+        final boolean overflows = (remainder >= spacesFree);
 
         if (overflows)
         {
@@ -304,7 +306,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts64[indexOfSubintervalToFirstCheck];
         final int spacesFree = 32 - count;
-        final boolean overflows = (remainder > spacesFree);
+        final boolean overflows = (remainder >= spacesFree);
 
         if (overflows)
         {
@@ -335,7 +337,7 @@ public final class UniqueRandomIntegerGen {
         final int indexOfSubintervalToFirstCheck = intervalIndex * 2;
         final int count = this.counts128[indexOfSubintervalToFirstCheck];
         final int spacesFree = 16 - count;
-        final boolean overflows = (remainder > spacesFree);
+        final boolean overflows = (remainder >= spacesFree);
 
         if (overflows)
         {
@@ -367,7 +369,7 @@ public final class UniqueRandomIntegerGen {
 
         // Compute the actual absolute index of the start of the interval
         final int intervalStartAbsIndex = intervalIndex * 16;
-        final int intervalLastAbsIndex = intervalStartAbsIndex + 17;
+        final int intervalLastAbsIndex = intervalStartAbsIndex + 15;
 
         // Iterate through the interval space until we've ticked off 'remainder' many unoccupied slots
         // (absIndex.e. values not in the HashSet). Remember, 'remainder' may equal zero.
@@ -455,11 +457,19 @@ public final class UniqueRandomIntegerGen {
 
 
         urig.tryInsertRelative(509); // 509
+        final boolean check1 = urig.sanityCheck();
+
         urig.tryInsertRelative(509); // 510
+        final boolean check2 = urig.sanityCheck();
+
         urig.tryInsertRelative(509); // 511
+        final boolean check3 = urig.sanityCheck();
+
         urig.tryInsertRelative(509); // 512
+        final boolean check4 = urig.sanityCheck();
+
         urig.tryInsertRelative(509); // 513
-        urig.tryInsertRelative(511); // 515
+        urig.tryInsertRelative(511); // 515 // // NOOOPE we're getting 16
 
         for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
         {
