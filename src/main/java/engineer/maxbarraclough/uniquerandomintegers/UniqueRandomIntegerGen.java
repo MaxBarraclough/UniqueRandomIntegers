@@ -269,9 +269,17 @@ public final class UniqueRandomIntegerGen {
     {
         ++(this.counts128[intervalIndex]);
         // TODO add to hashset
-        this.hs.add(intervalIndex); // // // why do it here???
+
+
+        // We must now compute the actual absolute index, from the two params we have
+        final int absoluteIndex = (intervalIndex * 128) + remainder;
+
+        this.hs.add(absoluteIndex); // if we move away from HashSet, it will be more important that we do this at the 'bottom'
     }
 
+
+    // We could have a findCountInInterval method, but all our operations are based on
+    // the 'opposite', of finding the absolute index s.t. the count before that index, matches a given value
 
 
     public static void main(final String[] args)
