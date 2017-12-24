@@ -445,7 +445,7 @@ public final class UniqueRandomIntegerGen {
         return checkedOk;
     }
 
-    public static void main(final String[] args)
+    private static void scrappyTest2()
     {
 
         final UniqueRandomIntegerGen urig = new UniqueRandomIntegerGen();
@@ -477,7 +477,27 @@ public final class UniqueRandomIntegerGen {
             System.out.println(current);
         }
 
-
         System.out.println("Hello world");
     }
+
+
+    public static void main(final String[] args) {
+        final java.security.SecureRandom rng = new java.security.SecureRandom();
+
+        final UniqueRandomIntegerGen urig = new UniqueRandomIntegerGen();
+
+        for (int i = 2047; i >= 0; --i)
+        {
+            final int rand = rng.nextInt(i+1); // returns an int s.t. 0 <= x < arg (i.e. exclusive of arg)
+            urig.tryInsertRelative(rand);
+        }
+
+        for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
+        {
+            final Integer current = it.next();
+            System.out.println(current);
+        }
+
+    }
+
 }
