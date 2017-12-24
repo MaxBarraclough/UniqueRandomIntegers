@@ -1,8 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  This file is part of UniqueRandomIntegerGen.
+ *
+ *  UniqueRandomIntegerGen is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License verion 3 as published by
+ *  the Free Software Foundation.
+ *
+ *  UniqueRandomIntegerGen is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License version 3 for more details.
+ *
+ *  You should have received a copy of the GNU General Public License version 3
+ *  along with UniqueRandomIntegerGen. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package engineer.maxbarraclough.uniquerandomintegers;
 
 import java.util.Arrays;
