@@ -127,7 +127,7 @@ public final class UniqueRandomIntegerGen {
         return setChanged;
     }
 
-    public void tryInsertRelative(final int rel) // TODO return absolute value
+    public int tryInsertRelative(final int rel)
     {
         if (!(rel >= 0))
         {
@@ -145,16 +145,20 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 1024 - hc0;
         final boolean overflowsFirstHalf = (rel >= spacesFree);
 
+        int ret;
+
         if (overflowsFirstHalf)
         {
             // then it goes somewhere in the second half of the space
             final int newRemainder = rel - spacesFree;
-            this.tryInsertRelative_ForGivenHalf(1, newRemainder);
+            ret = this.tryInsertRelative_ForGivenHalf(1, newRemainder);
         }
         else
         { // then it goes somewhere in the first half of the space
-            this.tryInsertRelative_ForGivenHalf(0, rel);
+            ret = this.tryInsertRelative_ForGivenHalf(0, rel);
         }
+
+        return ret;
     }
 
     /**
@@ -165,7 +169,7 @@ public final class UniqueRandomIntegerGen {
      * @param halfIndex
      * @param remainder
      */
-    private void tryInsertRelative_ForGivenHalf(final int halfIndex, final int remainder)
+    private int tryInsertRelative_ForGivenHalf(final int halfIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -183,21 +187,25 @@ public final class UniqueRandomIntegerGen {
         final int thatQuarterSpacesFree = 512 - thatQuarterCount;
         final boolean overflowsThatQuarter = (remainder >= thatQuarterSpacesFree);
 
+        int ret;
+
         if (overflowsThatQuarter)
         {
             final int correctQuarterIndex = indexOfQuarterToFirstCheck + 1;
             final int newRemainder = remainder - thatQuarterSpacesFree;
-            this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, newRemainder);
         }
         else
         {
             final int correctQuarterIndex = indexOfQuarterToFirstCheck;
-            this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, remainder);
+            ret = this.tryInsertRelative_ForGivenQuarter(correctQuarterIndex, remainder);
         }
+
+        return ret;
     }
 
 
-    private void tryInsertRelative_ForGivenQuarter(final int quarterIndex, final int remainder)
+    private int tryInsertRelative_ForGivenQuarter(final int quarterIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -215,20 +223,24 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 256 - count;
         final boolean overflows = (remainder >= spacesFree);
 
+        int ret;
+
         if (overflows)
         {
             final int correctEighthIndex = indexOfEighthToFirstCheck + 1;
             final int newRemainder = remainder - spacesFree;
-            this.tryInsertRelative_ForGivenEighth(correctEighthIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGivenEighth(correctEighthIndex, newRemainder);
         }
         else
         {
             final int correctEighthIndex = indexOfEighthToFirstCheck;
-            this.tryInsertRelative_ForGivenEighth(correctEighthIndex, remainder);
+            ret = this.tryInsertRelative_ForGivenEighth(correctEighthIndex, remainder);
         }
+
+        return ret;
     }
 
-    private void tryInsertRelative_ForGivenEighth(final int intervalIndex, final int remainder)
+    private int tryInsertRelative_ForGivenEighth(final int intervalIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -246,20 +258,25 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 128 - count;
         final boolean overflows = (remainder >= spacesFree);
 
+        int ret;
+
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
             final int newRemainder = remainder - spacesFree;
-            this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, newRemainder);
         }
         else
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
-            this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, remainder);
+            ret = this.tryInsertRelative_ForGiven16th(correctSubintervalIndex, remainder);
         }
+
+        return ret;
     }
 
-    private void tryInsertRelative_ForGiven16th(final int intervalIndex, final int remainder)
+
+    private int tryInsertRelative_ForGiven16th(final int intervalIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -277,20 +294,24 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 64 - count;
         final boolean overflows = (remainder >= spacesFree);
 
+        int ret;
+
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
             final int newRemainder = remainder - spacesFree;
-            this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, newRemainder);
         }
         else
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
-            this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, remainder);
+            ret = this.tryInsertRelative_ForGiven32th(correctSubintervalIndex, remainder);
         }
+
+        return ret;
     }
 
-    private void tryInsertRelative_ForGiven32th(final int intervalIndex, final int remainder)
+    private int tryInsertRelative_ForGiven32th(final int intervalIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -308,20 +329,24 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 32 - count;
         final boolean overflows = (remainder >= spacesFree);
 
+        int ret;
+
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
             final int newRemainder = remainder - spacesFree;
-            this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, newRemainder);
         }
         else
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
-            this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, remainder);
+            ret = this.tryInsertRelative_ForGiven64th(correctSubintervalIndex, remainder);
         }
+
+        return ret;
     }
 
-    private void tryInsertRelative_ForGiven64th(final int intervalIndex, final int remainder)
+    private int tryInsertRelative_ForGiven64th(final int intervalIndex, final int remainder)
     {
         if (!(remainder >= 0))
         {
@@ -339,21 +364,25 @@ public final class UniqueRandomIntegerGen {
         final int spacesFree = 16 - count;
         final boolean overflows = (remainder >= spacesFree);
 
+        int ret;
+
         if (overflows)
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck + 1;
             final int newRemainder = remainder - spacesFree;
-            this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, newRemainder);
+            ret = this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, newRemainder);
         }
         else
         {
             final int correctSubintervalIndex = indexOfSubintervalToFirstCheck;
-            this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, remainder);
+            ret = this.tryInsertRelative_ForGiven128th(correctSubintervalIndex, remainder);
         }
+
+        return ret;
     }
 
 
-    private void tryInsertRelative_ForGiven128th(final int intervalIndex, final int remainder) // TODO redundant param?
+    private int tryInsertRelative_ForGiven128th(final int intervalIndex, final int remainder) // TODO redundant param?
     {
         if (!(remainder >= 0))
         {
@@ -376,6 +405,8 @@ public final class UniqueRandomIntegerGen {
 
         int unoccupiedSlotsToSkip = remainder;
 
+        int ret;
+
         for (int absIndex = intervalStartAbsIndex; ; ++absIndex) // break inside the loop
         {
             if (!(absIndex <= intervalLastAbsIndex))
@@ -388,6 +419,7 @@ public final class UniqueRandomIntegerGen {
                 if (0 == unoccupiedSlotsToSkip)
                 {
                     this.hs.add(absIndex);
+                    ret = absIndex;
                     break;
                 }
                 else
@@ -397,6 +429,8 @@ public final class UniqueRandomIntegerGen {
             }
             // if occupied, then do nothing, just continue on
         }
+
+        return ret;
 
         // if we move away from HashSet, it will be more important that we do this at the 'bottom'
     }
@@ -493,15 +527,19 @@ public final class UniqueRandomIntegerGen {
         for (int i = 0; i < numValsToGen; ++i)
         {
             final int maxValOfRange = 2047 - i;
+
+            // Unhappily, nextInt(1) uses a conditional rejection strategy
             final int rand = rng.nextInt(maxValOfRange + 1); // returns an int s.t. 0 <= x < arg (i.e. exclusive of arg)
-            urig.tryInsertRelative(rand);
+
+            final int absIndex = urig.tryInsertRelative(rand);
+            System.out.println(absIndex);
         }
 
-        for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
-        {
-            final Integer current = it.next();
-            System.out.println(current);
-        }
+//        for(final Iterator<Integer> it = urig.getOrderedIterator(); it.hasNext();)
+//        {
+//            final Integer current = it.next();
+//            System.out.println(current);
+//        }
 
     }
 
